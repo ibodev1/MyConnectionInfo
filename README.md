@@ -1,6 +1,7 @@
 # MyConnectionInfo Android App
-- [Download Release APK v0.0.1](https://github.com/ibodev1/MyConnectionInfo/releases/tag/v0.0.1)
+- [Download Release APK v0.1.0](https://github.com/ibodev1/MyConnectionInfo/releases/tag/v0.1.0)
 - Api Service : [Abstract IP Geolocation Api](https://www.abstractapi.com/api/ip-geolocation-api)
 
 ## Screenshot
-<img src="screenshot.jpg" alt="screenshot" width="450" />
+<img src="previews/screenshot1.png" alt="screenshot" width="450" />
+<img src="previews/screenshot2.png" alt="screenshot" width="450" />
