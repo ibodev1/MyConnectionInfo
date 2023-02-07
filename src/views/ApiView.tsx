@@ -89,7 +89,7 @@ function ApiView({isConnected}: {isConnected: Boolean | null}): JSX.Element {
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#fff'}}>
       {isConnected ? (
-        <Box bg="#12123d" w="100%" overflow="hidden">
+        <Box w="100%" overflow="hidden">
           <ListItem
             onPress={() => {
               if (data && data.latitude && data.longitude) {
@@ -291,7 +291,13 @@ function ApiView({isConnected}: {isConnected: Boolean | null}): JSX.Element {
             }
           />
           <ListItem
-            title="VPN"
+            title={
+              <Box>
+                <Text variant="h6" color="#12123d">
+                  VPN
+                </Text>
+              </Box>
+            }
             leading={
               <MaterialCommunityIcons name="key" size={24} color="#12123d" />
             }
@@ -309,7 +315,7 @@ function ApiView({isConnected}: {isConnected: Boolean | null}): JSX.Element {
           />
         </Box>
       ) : (
-        <VStack spacing={12} fill center>
+        <VStack spacing={12} fill center mt={12}>
           <Text variant="h5" color="red">
             Internet Connection Error!
           </Text>

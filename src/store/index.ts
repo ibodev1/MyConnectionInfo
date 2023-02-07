@@ -1,9 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import wifiDataReducer from './slices/wifiDataSlice';
+import networkSlice from './slices/networkSlice';
 
 export const store = configureStore({
   reducer: {
     wifiData: wifiDataReducer,
+    network: networkSlice,
   },
 });
 

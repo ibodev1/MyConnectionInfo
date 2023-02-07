@@ -15,15 +15,15 @@ interface ITab {
 
 const TabList: ITab[] = [
   {
-    title: 'Deneme',
+    title: 'Connection',
     page: 0,
   },
   {
-    title: 'Deneme',
+    title: 'Network',
     page: 1,
   },
   {
-    title: 'Deneme',
+    title: 'WifiList',
     page: 2,
   },
 ];

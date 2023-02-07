@@ -11,6 +11,7 @@ import WifiManager from 'react-native-wifi-reborn';
 import {useSelector, useDispatch} from 'react-redux';
 import {RootState} from './store';
 import {setIpAddress} from './store/slices/wifiDataSlice';
+import NetworkView from './views/NetworkView';
 
 function App(): JSX.Element {
   const {data, loading} = useSelector((state: RootState) => state.wifiData);
@@ -104,6 +105,7 @@ function App(): JSX.Element {
           );
         }}>
         <ApiView isConnected={isConnected} />
+        <NetworkView isConnected={isConnected} />
       </PagerView>
     </Stack>
   );
