@@ -22,10 +22,6 @@ const TabList: ITab[] = [
     title: 'Network',
     page: 1,
   },
-  {
-    title: 'WifiList',
-    page: 2,
-  },
 ];
 
 function Tabs({
@@ -44,7 +40,6 @@ function Tabs({
             key={index}
             style={{flex: 1}}
             onPress={() => {
-              console.log(currentPage);
               pagerViweRef.current?.setPage(element.page);
             }}>
             <Flex

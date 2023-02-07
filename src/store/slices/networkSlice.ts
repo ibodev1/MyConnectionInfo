@@ -2,21 +2,29 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 export interface INetworkData {
-  ip: string | null;
-  status: boolean | null;
   bssid: string | null;
-  signalStrength: number | null;
-  ssid: string | null;
   frequency: number | null;
+  ipAddress: string | null;
+  isConnectionExpensive: boolean | null;
+  linkSpeed: number | null;
+  rxLinkSpeed: number | null;
+  ssid: string | null;
+  strength: number | null;
+  subnet: string | null;
+  txLinkSpeed: number | null;
 }
 
 const initialState: INetworkData = {
-  ip: null,
-  status: null,
   bssid: null,
-  ssid: null,
-  signalStrength: null,
   frequency: null,
+  ipAddress: null,
+  isConnectionExpensive: null,
+  linkSpeed: null,
+  rxLinkSpeed: null,
+  ssid: null,
+  strength: null,
+  subnet: null,
+  txLinkSpeed: null,
 };
 
 export const networkSlice = createSlice({

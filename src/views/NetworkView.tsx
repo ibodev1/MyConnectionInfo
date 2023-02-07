@@ -8,8 +8,8 @@ import {
   Wrap,
 } from '@react-native-material/core';
 import React, {useState, useEffect} from 'react';
-import WifiManager from 'react-native-wifi-reborn';
 import {INetworkData, setNetworkData} from '../store/slices/networkSlice';
+import NetInfo from '@react-native-community/netinfo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../store';
@@ -17,8 +17,10 @@ import {ScrollView} from 'react-native';
 
 function NetworkView({
   isConnected,
+  locationGranted,
 }: {
   isConnected: Boolean | null;
+  locationGranted: Boolean | null;
 }): JSX.Element {
   const [error, setError] = useState<any | null>(null);
   const {data} = useSelector((state: RootState) => state.network);
@@ -27,22 +29,30 @@ function NetworkView({
   useEffect(() => {
     const getNetworkData = async () => {
       try {
-        const ip = (await WifiManager.getIP()) || null;
-        const status = (await WifiManager.connectionStatus()) || null;
-        const bssid = (await WifiManager.getBSSID()) || null;
-        const signalStrength =
-          (await WifiManager.getCurrentSignalStrength()) || null;
-        const ssid = (await WifiManager.getCurrentWifiSSID()) || null;
-        const frequency = (await WifiManager.getFrequency()) || null;
-        const syncData: INetworkData = {
-          ip,
-          status,
-          bssid,
-          ssid,
-          signalStrength,
-          frequency,
+        const syncData = await NetInfo.fetch('wifi');
+        const newData: INetworkData = {
+          //@ts-ignore
+          bssid: syncData.details?.bssid,
+          //@ts-ignore
+          frequency: syncData.details?.frequency,
+          //@ts-ignore
+          ipAddress: syncData.details?.ipAddress,
+          //@ts-ignore
+          isConnectionExpensive: syncData.details?.isConnectionExpensive,
+          //@ts-ignore
+          linkSpeed: syncData.details?.linkSpeed,
+          //@ts-ignore
+          rxLinkSpeed: syncData.details?.rxLinkSpeed,
+          //@ts-ignore
+          ssid: syncData.details?.ssid,
+          //@ts-ignore
+          strength: syncData.details?.strength,
+          //@ts-ignore
+          subnet: syncData.details?.subnet,
+          //@ts-ignore
+          txLinkSpeed: syncData.details?.txLinkSpeed,
         };
-        dispatch(setNetworkData(syncData));
+        dispatch(setNetworkData(newData));
         return syncData;
       } catch (err) {
         setError(err);
@@ -51,7 +61,7 @@ function NetworkView({
     };
 
     getNetworkData();
-  }, []);
+  }, [locationGranted]);
 
   if (error) {
     return (
@@ -91,12 +101,12 @@ function NetworkView({
                 </Box>
                 <Box>
                   <Text variant="h6" color="#12123d">
-                    Ip Address
+                    Local Ip Address
                   </Text>
                 </Box>
               </Wrap>
             }
-            secondaryText={data?.ip ? data?.ip : 'No Ip Address!'}
+            secondaryText={data?.ipAddress ? data?.ipAddress : 'No Ip Address!'}
           />
           <ListItem
             title={
@@ -148,6 +158,25 @@ function NetworkView({
                 </Box>
                 <Box>
                   <Text variant="h6" color="#12123d">
+                    Subnet
+                  </Text>
+                </Box>
+              </Wrap>
+            }
+            secondaryText={data?.subnet ? data?.subnet : 'No SSID!'}
+          />
+          <ListItem
+            title={
+              <Wrap fill center>
+                <Box mr={10}>
+                  <MaterialCommunityIcons
+                    name="information"
+                    size={18}
+                    color="#12123d"
+                  />
+                </Box>
+                <Box>
+                  <Text variant="h6" color="#12123d">
                     Frequency
                   </Text>
                 </Box>
@@ -175,8 +204,75 @@ function NetworkView({
               </Wrap>
             }
             secondaryText={
-              data?.signalStrength
-                ? data?.signalStrength.toString()
+              data?.strength ? data?.strength.toString() : 'No Signal Strength!'
+            }
+          />
+          <ListItem
+            title={
+              <Wrap fill center>
+                <Box mr={10}>
+                  <MaterialCommunityIcons
+                    name="information"
+                    size={18}
+                    color="#12123d"
+                  />
+                </Box>
+                <Box>
+                  <Text variant="h6" color="#12123d">
+                    Link Speed
+                  </Text>
+                </Box>
+              </Wrap>
+            }
+            secondaryText={
+              data?.linkSpeed
+                ? data?.linkSpeed.toString()
+                : 'No Signal Strength!'
+            }
+          />
+          <ListItem
+            title={
+              <Wrap fill center>
+                <Box mr={10}>
+                  <MaterialCommunityIcons
+                    name="information"
+                    size={18}
+                    color="#12123d"
+                  />
+                </Box>
+                <Box>
+                  <Text variant="h6" color="#12123d">
+                    Link Speed (Rx)
+                  </Text>
+                </Box>
+              </Wrap>
+            }
+            secondaryText={
+              data?.rxLinkSpeed
+                ? data?.rxLinkSpeed.toString()
+                : 'No Signal Strength!'
+            }
+          />
+          <ListItem
+            title={
+              <Wrap fill center>
+                <Box mr={10}>
+                  <MaterialCommunityIcons
+                    name="information"
+                    size={18}
+                    color="#12123d"
+                  />
+                </Box>
+                <Box>
+                  <Text variant="h6" color="#12123d">
+                    Link Speed (Tx)
+                  </Text>
+                </Box>
+              </Wrap>
+            }
+            secondaryText={
+              data?.txLinkSpeed
+                ? data?.txLinkSpeed.toString()
                 : 'No Signal Strength!'
             }
           />
@@ -184,7 +280,7 @@ function NetworkView({
             title={
               <Box>
                 <Text variant="h6" color="#12123d">
-                  Status
+                  Expensive Connection
                 </Text>
               </Box>
             }
@@ -198,9 +294,11 @@ function NetworkView({
             trailing={
               <MaterialCommunityIcons
                 name={
-                  data?.status ? 'check-circle-outline' : 'close-circle-outline'
+                  data?.isConnectionExpensive
+                    ? 'check-circle-outline'
+                    : 'close-circle-outline'
                 }
-                color={data?.status ? 'green' : 'red'}
+                color={data?.isConnectionExpensive ? 'green' : 'red'}
                 size={24}
               />
             }

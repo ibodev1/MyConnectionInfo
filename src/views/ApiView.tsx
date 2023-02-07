@@ -20,7 +20,7 @@ import {
 } from '../store/slices/wifiDataSlice';
 import type {RootState} from '../store';
 import {useEffect} from 'react';
-import WifiManager from 'react-native-wifi-reborn';
+import NetInfo from '@react-native-community/netinfo';
 
 const API_KEY = '784d49642889445c91021284f17cc871';
 
@@ -41,14 +41,15 @@ function ApiView({isConnected}: {isConnected: Boolean | null}): JSX.Element {
         return responseData;
       } catch (err: any) {
         setError(err);
-        WifiManager.getIP().then(
-          ip => {
-            dispatch(setIpAddress(ip));
-          },
-          () => {
+        dispatch(setLoading(false));
+        NetInfo.fetch('wifi')
+          .then(response => {
+            //@ts-ignore
+            dispatch(setIpAddress(response.details?.ipAddress));
+          })
+          .catch(() => {
             dispatch(setIpAddress('0.0.0.0'));
-          },
-        );
+          });
         return err;
       }
     };
@@ -102,8 +103,7 @@ function ApiView({isConnected}: {isConnected: Boolean | null}): JSX.Element {
             }}
             onLongPress={() => {
               if (data && data.latitude && data.longitude) {
-                console.log(data);
-                // Linking.openURL(`geo:${data?.latitude},${data?.longitude}`);
+                Linking.openURL(`geo:${data?.latitude},${data?.longitude}`);
               }
             }}
             title={
